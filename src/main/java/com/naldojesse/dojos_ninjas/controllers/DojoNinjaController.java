@@ -7,12 +7,14 @@ import com.naldojesse.dojos_ninjas.services.NinjaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class DojoNinjaController {
@@ -58,8 +60,15 @@ public class DojoNinjaController {
         }
     }
 
-//    @RequestMapping("/dojos/{id}")
-//    public String viewDojo() {
-//        return "viewDojo.jsp";
-//    }
+    @RequestMapping("/dojos/{id}")
+    public String viewDojo(Model model, @PathVariable("id") Long id) {
+        Optional<Dojo> dojo = dojoService.findDojoById(id);
+        if (dojo.isPresent()) {
+            model.addAttribute("dojo", dojo.get());
+        } else {
+            return "redirect:/dojos/new";
+        }
+        return "viewDojo.jsp";
+
+    }
 }
